@@ -5,7 +5,6 @@ var net = require('net')
 var curUserCnt = 0
 var socketList = []
 
-
 var server = net.createServer()
 
 server.on("listening", () => {
@@ -15,7 +14,6 @@ server.on("listening", () => {
 server.on('connection', (socket) => {
   curUserCnt += 1
   socketList.push(socket)
-
   socket.on('timeout', () => {
     console.log('connect to server timeout');
   })
@@ -51,9 +49,6 @@ server.on("close", () => {
 
 server.listen(8000)
 console.log("listen to 8000");
-
-
-
 
 setInterval(() => {
   socketList.forEach((socket) => {
