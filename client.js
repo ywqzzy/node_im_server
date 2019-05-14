@@ -40,3 +40,7 @@ setTimeout(() => {
   client.end()
 }, 1000)
 */
+
+setInterval(() => {
+  client.write("hello im client")
+},2000)
