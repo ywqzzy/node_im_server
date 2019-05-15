@@ -31,11 +31,14 @@ io.set('authorization', (handShakeData, accept) => {
 })
 
 io.on('connection', (socket) => {
-  console.log(socket.handshake.headers.userId)
+  //console.log(socket.handshake.headers.userId)
+  //socket.emit('welcome', 'welcome')
+  socket.on('serverEvents.send', (data) => {
+    console.log(data)
+  })// on
 
-  socket.emit('welcome', 'welcome')
+  socket.emit('clientEvents.welcome', 'welcome to myIM') //emit  you can define events
 })
-
 
 server.listen('8000', (err) => {
   if(err) return console.error(err);
