@@ -4,9 +4,7 @@ var path = require('path')
 var express = require('express')
 //console.log('abcddddedsadkhashkadsjdkdsjkasasdasdsadsadhk');
 var SocketIo = require('socket.io')
-
 var app = express()
-
 
 app.use(express.static(path.join(__dirname, './public')))
 

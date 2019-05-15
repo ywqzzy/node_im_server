@@ -3,9 +3,50 @@
   <head>
     <meta charset="utf-8">
     <title>WEB IM</title>
+    <link rel="stylesheet" href="/assets/bootstrap.min.css">
   </head>
   <body>
-    hello world
+    <div class="container">
+      <div class="row">
+        <!--left -->
+        <div class="col-md-3">
+          <!--  userinfo-->
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              UserInfo
+            </div>
+            <div class="panel-body">
+
+            </div>
+          </div>
+          <!--  userlist-->
+          <div class="panel panel-warning">
+            <div class="panel-heading">
+              UserList
+            </div>
+            <div class="panel-body">
+
+            </div>
+          </div>
+        </div>
+
+        <!-- right -->
+        <div class="col-md-9">
+          <div class="panel panel-danger">
+            <div class="panel-heading">
+              会话【ALL】
+            </div>
+            <div class="panel-body">
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <script src="/assets/jquery.min.js"></script>
+    <script src="/assets/bootstrap.min.js"></script>
     <script src='/js/socket.io.js'></script>
     <script src="./client.js"></script>
   </body>
