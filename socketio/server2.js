@@ -1,8 +1,10 @@
 'use strict'
-
+var http = require('http')
 var io = require('socket.io')
 var userCount = 0
-var server = io()
+
+var httpServer = http.createServer()
+var server = io(httpServer)
 
 server.on('connection', (socket) => {
   userCount ++
@@ -14,8 +16,6 @@ server.on('connection', (socket) => {
   })
 })
 
-
-
-server.listen(8080)
-
-console.log(`Server started.Listening to port %s`, 8080)
+httpServer.listen(8080, () => {
+  console.log(`Server started.Listening to port %s`, 8080)
+})

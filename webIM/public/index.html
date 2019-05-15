@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>WEB IM</title>
+  </head>
+  <body>
+
+    hello world
+
+    <script src='/js/socket.io.js'></script>
+    <script type="text/javascript">
+      var client = io.connect('http://localhost:8000')
+      console.log(client)
+
+      client.on('error', function(err) {
+        console.log(err)
+      })
+      client.on('welcome', function(data) {
+        alert(data)
+      })
+    </script>
+
+  </body>
+</html>
