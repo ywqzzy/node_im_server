@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Socket.io Client Page</title>
+  </head>
+  <body>
+    <script src="socket.io.js"></script>
+    <script>
+      var client = io.connect('http://localhost:8080')
+      client.on('welcome', (data) => {
+        alert(data)
+      })
+    </script>
+
+  </body>
+</html>
