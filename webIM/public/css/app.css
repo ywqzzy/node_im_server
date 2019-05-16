@@ -35,3 +35,28 @@
 .app-msg-body {
   padding-bottom: 5px;
 }
+
+.backup {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  background: lightgray;
+  opacity: 0.6;
+  display: none;
+}
+
+.app-file-container {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  bottom: 50%;
+  left: 50%;
+  padding: 10px;
+  width: 400px;
+  margin-left: -200px;
+  z-index: 100;
+  display: none;
+}

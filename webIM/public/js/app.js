@@ -61,7 +61,7 @@ $(function() {
   })
 
   $elBtnSendFile.on('click', function() {
-
+    $('.app-file-container, .backup').show()
   })
 
   $(document).on('paste', function(e) {
