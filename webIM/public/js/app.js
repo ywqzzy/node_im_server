@@ -15,6 +15,9 @@ $(function() {
   var $elTemplate = $('#el_template')
   var $elBtnSend = $('#el_btn_send')
   var $inputMsg = $('#el_input_msg')
+  var $elUserList = $('#table_userlist')
+  var $elBtnSendFile = $('#el_btn_sendfile')
+
   var client = io.connect('http://localhost:8000', {
     reconnectionAttempts: 3,
     reconnection: true,
@@ -47,7 +50,6 @@ $(function() {
     }
 
     client.emit('server.newMsg', msgObj)
-
   }
 
   $elBtnSend.on('click', function() {
@@ -56,6 +58,10 @@ $(function() {
       sendMsg(value)
     }
     $inputMsg.val('')
+  })
+
+  $elBtnSendFile.on('click', function() {
+
   })
 
   $(document).on('paste', function(e) {
@@ -89,6 +95,8 @@ $(function() {
     nickName = prompt('请输入你的昵称：')
   }while(!nickName);
 
+  $('#span_nickName').text(nickName)
+
   client.emit('server.online', nickName)
 
   client.on('client.newMsg', function(msgObj) {
@@ -100,6 +108,7 @@ $(function() {
     $appChatContent[0].scrollTop = $appChatContent[0].scrollHeight
 
   })
+
   client.on('client.online', function(nickName) {
     writeMsg('system', '[' + nickName + ']上线了')
   })
@@ -107,6 +116,21 @@ $(function() {
   client.on('client.offline', function(nickName) {
       writeMsg('system', '[' + nickName + ']下线了')
   })
+
+  client.on('client.onlineList', function(userList) {
+    console.log(userList)
+    $elUserList.find('tr').not(':eq(0)').remove()
+    userList.forEach(function(userNick) {
+      let t =  $(`<tr><td> ${userNick} </td></tr>`)
+      $elUserList.append(t)
+    })
+  })
+
+  var intervalId = setInterval(function() {
+    client.emit('server.getOnlineList')
+  }, 1000 * 10)
+
+
 
   client.on('error', function(err) {
     console.log(err)

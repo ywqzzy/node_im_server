@@ -29,6 +29,13 @@ io.set('authorization', (handShakeData, accept) => {
   }
 })
 
+var getUserList = (userMap) => {
+  var userList = []
+  for(let client of userMap.values()) {
+    userList.push(client.nickName)
+  }
+  return userList
+}
 var userMap = new Map()
 
 io.on('connection', (socket) => {
@@ -41,7 +48,7 @@ io.on('connection', (socket) => {
   socket.on('server.online', (nickName) => {
     socket.nickName = nickName
     io.emit('client.online', nickName)
-    console.log("fuck!",nickName)
+    //console.log("fuck!",nickName)
   })
 
   socket.on('server.newMsg', (msgObj) => {
@@ -50,8 +57,12 @@ io.on('connection', (socket) => {
     io.emit('client.newMsg', msgObj)
   })
 
+  socket.on('server.getOnlineList', () => {
+    socket.emit('client.onlineList', getUserList(userMap))
+  })
 
   socket.on('disconnect', () => {
+    userMap.delete(socket.id)
     socket.broadcast.emit('client.offline', socket.nickName)
   })
 
