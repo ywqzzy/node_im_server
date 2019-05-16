@@ -44,6 +44,13 @@ io.on('connection', (socket) => {
     console.log("fuck!",nickName)
   })
 
+  socket.on('server.newMsg', (msgObj) => {
+    msgObj.now = Date.now()
+    msgObj.nickName = socket.nickName
+    io.emit('client.newMsg', msgObj)
+  })
+
+
   socket.on('disconnect', () => {
     socket.broadcast.emit('client.offline', socket.nickName)
   })

@@ -13,6 +13,8 @@ $(function() {
   var nickName ;
   var $appChatContent = $('.app-chat-content')
   var $elTemplate = $('#el_template')
+  var $elBtnSend = $('#el_btn_send')
+  var $inputMsg = $('#el_input_msg')
   var client = io.connect('http://localhost:8000', {
     reconnectionAttempts: 3,
     reconnection: true,
@@ -25,17 +27,29 @@ $(function() {
   //utils
   function writeMsg(type, msg, title, isSelf ) {
     title = title || (type === 'system'? '系统消息': 'User')
-
     var template = $elTemplate.html()
       .replace('${title}', title)
       .replace('${bgClass}', type === 'system' ? 'label-danger' : 'label-info')
-      .replace('${pullRight}', isSelf? 'pull-right': '')
+      .replace(/\${pullRight}/g, isSelf? 'pull-right': '')
       .replace('${time}', '00:00:00' )
       .replace('${msg}', msg)
+      .replace('${textRight}', isSelf? 'text-right': '')
       .replace('${info-icon}', type==='system'? 'glyphicon-info-sign': 'glyphicon-user')
 
     $appChatContent.append($(template))
   }
+
+  $elBtnSend.on('click', function() {
+    var value = $inputMsg.val()
+    if(value) {
+      client.emit('server.newMsg', {
+        type:'text',
+        data: value,
+        clientId: client.id
+      })
+    }
+    $inputMsg.val('')
+  })
 
   do{
     nickName = prompt('请输入你的昵称：')
@@ -43,6 +57,10 @@ $(function() {
 
   client.emit('server.online', nickName)
 
+  client.on('client.newMsg', function(msgObj) {
+    writeMsg('user', msgObj.data, msgObj.nickName, msgObj.clientId === client.id)
+
+  })
   client.on('client.online', function(nickName) {
     writeMsg('system', '[' + nickName + ']上线了')
   })
