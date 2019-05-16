@@ -39,16 +39,50 @@ $(function() {
     $appChatContent.append($(template))
   }
 
+  function sendMsg(msg, type) {
+    var msgObj = {
+      type: type || 'text',
+      data: msg,
+      clientId: client.id
+    }
+
+    client.emit('server.newMsg', msgObj)
+
+  }
+
   $elBtnSend.on('click', function() {
     var value = $inputMsg.val()
     if(value) {
-      client.emit('server.newMsg', {
-        type:'text',
-        data: value,
-        clientId: client.id
-      })
+      sendMsg(value)
     }
     $inputMsg.val('')
+  })
+
+  $(document).on('paste', function(e) {
+    var originalEvent = e.originalEvent
+    var items
+
+    if(originalEvent.clipboardData && originalEvent.clipboardData.items) {
+      items = originalEvent.clipboardData.items
+    }
+    if(items) {
+      for(var i = 0; i < items.length; i++) {
+        var item = items[i]
+        if(item.kind === 'file') {
+          var pasteFile = item.getAsFile()
+          if(pasteFile.size > 1024 * 1024) {
+            return
+          }
+          var reader = new FileReader()
+          reader.onloadend = function() {
+              var imgBase64Str = reader.result
+              console.log(imgBase64Str)
+              sendMsg(imgBase64Str, 'image')
+          }
+          reader.readAsDataURL(pasteFile)
+        }
+      }
+    }
   })
 
   do{
@@ -58,7 +92,12 @@ $(function() {
   client.emit('server.online', nickName)
 
   client.on('client.newMsg', function(msgObj) {
+    if(msgObj.type === 'image') {
+      msgObj.data = '<img src="'+ msgObj.data + '" alt="image" >'
+
+    }
     writeMsg('user', msgObj.data, msgObj.nickName, msgObj.clientId === client.id)
+    $appChatContent[0].scrollTop = $appChatContent[0].scrollHeight
 
   })
   client.on('client.online', function(nickName) {
