@@ -18,6 +18,7 @@ var io = new SocketIo(server, {
   path: '/socket.io',
   serverClient: false, //禁用客户端js
 })
+
 //auth
 io.set('authorization', (handShakeData, accept) => {
   if(handShakeData.headers.cookie) {
@@ -28,6 +29,8 @@ io.set('authorization', (handShakeData, accept) => {
   }
 })
 
+var userMap = new Map()
+
 io.on('connection', (socket) => {
   //console.log(socket.handshake.headers.userId)
   //socket.emit('welcome', 'welcome')
@@ -35,7 +38,26 @@ io.on('connection', (socket) => {
     console.log(data)
   })// on
 
-  socket.emit('clientEvents.welcome', 'welcome to myIM') //emit  you can define events
+  socket.on('server.online', (nickName) => {
+    socket.nickName = nickName
+    io.emit('client.online', nickName)
+    console.log("fuck!",nickName)
+  })
+
+  socket.on('disconnect', () => {
+    socket.broadcast.emit('client.offline', socket.nickName)
+  })
+
+  userMap.set(socket.id, socket)
+  //socket.emit('clientEvents.welcome', 'welcome to myIM') //emit  you can define events
+  //io.emit("online", socket.id)
+  // io.sockets.emit
+  // socket.broadcast.emit  广播给除自己之外的人
+  for(let client of userMap.values()) {
+    if(client.id != socket.id) {
+      client.emit('online', 'welcome')
+    }
+  }
 })
 
 server.listen('8000', (err) => {

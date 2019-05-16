@@ -4,19 +4,19 @@
     <meta charset="utf-8">
     <title>WEB IM</title>
     <link rel="stylesheet" href="/assets/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/app.css">
   </head>
   <body>
     <div class="container">
       <div class="row">
         <!--left -->
-        <div class="col-md-3">
+        <div class="col-md-3 col-xs-4">
           <!--  userinfo-->
           <div class="panel panel-info">
             <div class="panel-heading">
               UserInfo
             </div>
             <div class="panel-body">
-
             </div>
           </div>
           <!--  userlist-->
@@ -24,30 +24,70 @@
             <div class="panel-heading">
               UserList
             </div>
-            <div class="panel-body">
-
+            <div class="panel-body app-user-list-body">
+              <table class="table table-bordered table-condensed">
+                <tr class="success">
+                  <td>ALL</td>
+                </tr>
+                <tr>
+                  <td>user2</td>
+                </tr>
+                <tr>
+                  <td>user3</td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
 
         <!-- right -->
-        <div class="col-md-9">
+        <div class="col-md-9 col-xs-8">
           <div class="panel panel-danger">
             <div class="panel-heading">
               会话【ALL】
             </div>
-            <div class="panel-body">
+            <div class="panel-body app-chat-body">
+              <div class="app-chat-content">
 
+
+              </div>
+              <div class="app-chat-operator">
+                <div class="input-group">
+                  <input type="text" class="form-control">
+                  <span class="input-group-btn">
+                    <button class="btn btn-danger">
+                      Send <i class="glyphicon glyphicon-send"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-
         </div>
-
       </div>
     </div>
+    <div id="el_template">
+      <div class="col-md-7 col-xs-7 app-msg-panel ${pullRight}">
+        <div class="app-msg-heading text-right">
+          <span class="${bgClass} app-msg-tip ${pullRight}">
+            <i class="glyphicon ${info-icon}"></i>
+            ${title}
+          </span>
+          <span class="label-default app-msg-tip">
+            <i class="glyphicon glyphicon-time"></i>
+            ${time}
+          </span>
+        </div>
+        <div class="app-msg-body">
+          ${msg}
+        </div>
+      </div>
+    </div>
+
+    </script>
     <script src="/assets/jquery.min.js"></script>
     <script src="/assets/bootstrap.min.js"></script>
-    <script src='/js/socket.io.js'></script>
-    <script src="./client.js"></script>
+    <script src='/assets/socket.io.js'></script>
+    <script src="/js/app.js"></script>
   </body>
 </html>
