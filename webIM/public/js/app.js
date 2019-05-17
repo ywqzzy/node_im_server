@@ -10,13 +10,16 @@ $(function() {
   })
 
 
-  var nickName ;
+  var nickName;
   var $appChatContent = $('.app-chat-content')
   var $elTemplate = $('#el_template')
   var $elBtnSend = $('#el_btn_send')
   var $inputMsg = $('#el_input_msg')
   var $elUserList = $('#table_userlist')
   var $elBtnSendFile = $('#el_btn_sendfile')
+  var $elBtnFileSend = $('#el_btn_file_send')
+  var $elBtnFileCancel = $('#el_btn_file_cancel')
+  var $elFileUploadElements = $('.app-file-container, .backup')
 
   var client = io.connect('http://localhost:8000', {
     reconnectionAttempts: 3,
@@ -61,8 +64,33 @@ $(function() {
   })
 
   $elBtnSendFile.on('click', function() {
-    $('.app-file-container, .backup').show()
+    $elFileUploadElements.show()
   })
+
+  $elBtnFileSend.on('click', function() {
+    var files = document.getElementById('el_file').files
+    if(files.length === 0) {
+      return alert('Must select a file')
+    }
+    var file = files[0]
+    client.emit('server.sendfile', {
+      clientId: client.id,
+      file: file,
+      fileName: file.name
+    })
+    $elFileUploadElements.hide()
+  })
+
+  $elBtnFileCancel.on('click', function() {
+    //console.log("shit");
+    $elFileUploadElements.hide()
+  })
+
+
+
+
+
+
 
   $(document).on('paste', function(e) {
     var originalEvent = e.originalEvent
@@ -99,6 +127,14 @@ $(function() {
 
   client.emit('server.online', nickName)
 
+  client.on('client.file', function(fileMsgObj) {
+    writeMsg('user',
+     `文件：<a href="/files/${fileMsgObj.data}">${fileMsgObj.data}</a>`,
+     fileMsgObj.nickName,
+     client.id === fileMsgObj.clientId)
+  })
+
+
   client.on('client.newMsg', function(msgObj) {
     if(msgObj.type === 'image') {
       msgObj.data = '<img src="'+ msgObj.data + '" alt="image" >'
@@ -129,7 +165,6 @@ $(function() {
   var intervalId = setInterval(function() {
     client.emit('server.getOnlineList')
   }, 1000 * 10)
-
 
 
   client.on('error', function(err) {

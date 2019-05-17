@@ -1,6 +1,7 @@
 'use strict'
 var http = require('http')
 var path = require('path')
+var fs = require('fs')
 var express = require('express')
 //console.log('abcddddedsadkhashkadsjdkdsjkasasdasdsadsadhk');
 var SocketIo = require('socket.io')
@@ -57,6 +58,17 @@ io.on('connection', (socket) => {
     io.emit('client.newMsg', msgObj)
   })
 
+  socket.on('server.sendfile', (fileMsgObj) => {
+    var filePath = path.resolve(__dirname, `./public/files/${fileMsgObj.fileName}`)
+    fs.writeFileSync(filePath, fileMsgObj.file, 'binary')
+    io.emit('client.file', {
+      nickName: socket.nickName,
+      now: Date.now(),
+      data: fileMsgObj.fileName,
+      clientId: fileMsgObj.clientId
+    })
+  })
+
   socket.on('server.getOnlineList', () => {
     socket.emit('client.onlineList', getUserList(userMap))
   })
@@ -67,10 +79,13 @@ io.on('connection', (socket) => {
   })
 
   userMap.set(socket.id, socket)
+
+
   //socket.emit('clientEvents.welcome', 'welcome to myIM') //emit  you can define events
   //io.emit("online", socket.id)
   // io.sockets.emit
   // socket.broadcast.emit  广播给除自己之外的人
+
   for(let client of userMap.values()) {
     if(client.id != socket.id) {
       client.emit('online', 'welcome')

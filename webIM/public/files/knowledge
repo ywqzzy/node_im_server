@@ -1,0 +1,43 @@
+#ifndef KNOWLEDGE
+#define KNOWLEDGE
+
+#endif // Knowledge
+
+#include <QVariant>
+#include <vector>
+#include <QAbstractTableModel>
+#include <QDebug>
+#include <QString>
+
+class KnowledgeItem {
+public:
+    KnowledgeItem() {
+        typeKey = 1;
+        typeValue = "";
+        element = "";
+        ipCacheList = "";
+    }
+    void initFakeItem();
+public:
+    int typeKey;
+    QString typeValue,element,ipCacheList;
+};
+
+class KnowledgeModel:public QAbstractTableModel {
+public:
+    KnowledgeModel(QObject *parent = NULL);
+    ~KnowledgeModel();
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    Qt::ItemFlags flags( const QModelIndex & index ) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
+    virtual QVariant data(const QModelIndex &index, int role  = Qt::DisplayRole ) const;
+
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+    QVector<KnowledgeItem * >* dataModel() { return &models; }
+    bool setData( const QModelIndex & index, const QVariant & value, int role = Qt::DisplayRole);
+private:
+    QVector<KnowledgeItem* > models;
+    QStringList columnList;
+};
