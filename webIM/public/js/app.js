@@ -30,6 +30,12 @@ $(function() {
     autoConnect: true
   })
 
+  var clientForNewNsp = io.connect('http://localhost:8000/nsp1')
+
+  clientForNewNsp.on('connect', function() {
+    console.log('clientForNewNsp connect server succeed')
+  })
+
   //utils
   function writeMsg(type, msg, title, isSelf ) {
     title = title || (type === 'system'? '系统消息': 'User')
@@ -85,10 +91,6 @@ $(function() {
     //console.log("shit");
     $elFileUploadElements.hide()
   })
-
-
-
-
 
 
 

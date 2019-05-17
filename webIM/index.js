@@ -93,6 +93,13 @@ io.on('connection', (socket) => {
   }
 })
 
+// new namspace
+var newNsp = io.of('/nsp1')
+newNsp.on('connection', (socket) => {
+  console.log("new namespace client connected")
+  io.emit('test', "message from nsp1")
+})
+
 server.listen('8000', (err) => {
   if(err) return console.error(err);
   console.log('server started .listening port %s', server.address().port)
