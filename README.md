@@ -1,1 +1,1 @@
-echo my IM server
+easy im demo
